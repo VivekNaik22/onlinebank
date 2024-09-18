@@ -1,0 +1,63 @@
+.all-bank-accounts {
+    margin: 20px;
+  }
+  
+  .table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+  
+  .table th, .table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .search-form {
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .form-control {
+    margin-right: 10px;
+  }
+  
+  .is-invalid {
+    border-color: red;
+  }
+  
+  .invalid-feedback {
+    color: red;
+    margin-left: 10px;
+  }
+  
+  .btn {
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-right: 5px;
+  }
+  
+  .btn-danger {
+    background-color: red;
+    color: white;
+  }
+  
+  .btn-success {
+    background-color: green;
+    color: white;
+  }
+  
+  .btn-secondary {
+    background-color: grey;
+    color: white;
+  }
+  
+  .btn-info {
+    background-color: blue;
+    color: white;
+  }
+  

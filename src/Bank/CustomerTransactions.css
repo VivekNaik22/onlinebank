@@ -1,0 +1,57 @@
+.customer-transactions {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 1700px;
+    background-color: #f5f5dc; /* Light beige background */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .customer-transactions header h1 {
+    text-align: center;
+    color: #8b0000; /* Dark red */
+    margin-bottom: 20px;
+  }
+  
+  .transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-family: Arial, sans-serif;
+  }
+  
+  .transactions-table th, .transactions-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .transactions-table th {
+    background-color: #8b0000; /* Dark red */
+    color: white;
+  }
+  
+  .transactions-table td {
+    background-color: #fffaf0; /* Ivory */
+  }
+  
+  .transactions-table tbody tr:hover {
+    background-color: #ffe4b5; /* Light yellow highlight on hover */
+  }
+  
+  .transactions-table td:nth-child(5), .transactions-table td:nth-child(6) {
+    text-align: right;
+  }
+  
+  .transactions-table td:nth-child(7), .transactions-table td:nth-child(8) {
+    text-align: center;
+  }
+  
+  .transactions-table td:nth-child(9) {
+    text-align: left;
+    font-style: italic;
+  }
+  
+  .transactions-table td:nth-child(10) {
+    text-align: center;
+  }
+  

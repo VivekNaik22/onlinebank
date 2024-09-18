@@ -1,0 +1,100 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar {
+    background-color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .logo h1 {
+    font-size: 24px;
+    color: #5c1e1e;
+  }
+  
+  .navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+  }
+  
+  .navbar ul li {
+    display: inline;
+  }
+  
+  .navbar ul li a {
+    text-decoration: none;
+    color: #5c1e1e;
+    font-weight: bold;
+  }
+  
+  .hero-section {
+    background-color: #f9e7df;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .hero-content {
+    max-width: 50%;
+  }
+  
+  .hero-content h2 {
+    color: #8b0000;
+    font-size: 28px;
+    margin: 0 0 10px;
+  }
+  
+  .hero-content p {
+    color: #8b0000;
+    font-size: 18px;
+  }
+  
+  .hero-image img {
+    
+        width: 400px; /* Adjust width as needed */
+        height: 400px; /* Adjust height as needed */
+      }
+      
+    
+
+  
+  .welcome-section {
+    padding: 40px 20px;
+    background-color: #fff;
+    text-align: center;
+  }
+  
+  .welcome-section h2 {
+    color: #8b0000;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .welcome-section p {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .get-started-btn {
+    background-color: #8b0000;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .get-started-btn:hover {
+    background-color: #5c1e1e;
+  }
+  

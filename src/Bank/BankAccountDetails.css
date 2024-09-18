@@ -1,0 +1,30 @@
+.btn-danger {
+    background-color: red;
+    color: white;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .success-message {
+    margin-top: 20px;
+    color: green;
+  }
+  
+  .is-invalid {
+    border-color: red;
+  }
+  
+  .invalid-feedback {
+    color: red;
+  }
+  
