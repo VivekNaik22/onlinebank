@@ -13,6 +13,7 @@ const CustomerBankAccountDetail = () => {
     creationDate: '8/30/2023, 7:33:22 PM',
     availableBalance: 1000,
     accountStatus: 'Open',
+    accountType: 'Savings', // Default account type
   });
 
   const [startDate, setStartDate] = useState('');
@@ -54,6 +55,7 @@ const CustomerBankAccountDetail = () => {
       ['Creation Date', accountDetails.creationDate],
       ['Available Balance', accountDetails.availableBalance],
       ['Account Status', accountDetails.accountStatus],
+      ['Account Type', accountDetails.accountType],  // Add Account Type to PDF
     ];
 
     doc.autoTable({
@@ -122,6 +124,23 @@ const CustomerBankAccountDetail = () => {
       <div className="form-group">
         <label htmlFor="accountStatus">Account Status</label>
         <input type="text" id="accountStatus" value={accountDetails.accountStatus} readOnly />
+      </div>
+
+      {/* Account Type Dropdown */}
+      <div className="form-group">
+        <label htmlFor="accountType">Account Type</label>
+        <select
+          id="accountType"
+          value={accountDetails.accountType}
+          onChange={(e) =>
+            setAccountDetails({ ...accountDetails, accountType: e.target.value })
+          }
+          style={{ padding: '8px' }}
+        >
+          <option value="Savings">Savings</option>
+          <option value="FD">Fixed Deposit (FD)</option>
+          <option value="Current">Current Account</option>
+        </select>
       </div>
 
       {/* Date selection inputs */}

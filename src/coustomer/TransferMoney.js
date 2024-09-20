@@ -7,12 +7,13 @@ const TransferMoney = () => {
   const [ifscCode, setIfscCode] = useState('');
   const [amount, setAmount] = useState('');
   const [purpose, setPurpose] = useState('');
+  const [accountType, setAccountType] = useState('Savings'); // Default account type
   const [errorMessage, setErrorMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Validation function
   const validateForm = () => {
-    if (!accountNumber || !ifscCode || !amount || !purpose) {
+    if (!accountNumber || !ifscCode || !amount || !purpose || !accountType) {
       setErrorMessage('All fields are required.');
       return false;
     }
@@ -80,6 +81,20 @@ const TransferMoney = () => {
           />
         </div>
 
+        {/* Account Type Dropdown */}
+        <div className="form-group">
+          <label htmlFor="accountType">Account Type</label>
+          <select
+            id="accountType"
+            value={accountType}
+            onChange={(e) => setAccountType(e.target.value)}
+          >
+            <option value="Savings">Savings</option>
+            <option value="FD">Fixed Deposit (FD)</option>
+            <option value="Current">Current Account</option>
+          </select>
+        </div>
+
         {/* Purpose Field */}
         <div className="form-group">
           <label htmlFor="purpose">Purpose</label>
@@ -107,7 +122,8 @@ const TransferMoney = () => {
             <h3>Transfer Successful</h3>
             <p>
               You have successfully transferred {amount} to account{' '}
-              {accountNumber} for the purpose of "{purpose}".
+              {accountNumber} for the purpose of "{purpose}". The transfer was
+              made from your {accountType} account.
             </p>
             <button
               className="modal-close-btn"

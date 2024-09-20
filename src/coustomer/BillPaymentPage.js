@@ -4,6 +4,7 @@ function BillPaymentPage() {
   const [selectedBill, setSelectedBill] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [accountId, setAccountId] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
   const [amount, setAmount] = useState('');
   const [electricityProvider, setElectricityProvider] = useState('');
   const [simProvider, setSimProvider] = useState('');
@@ -35,6 +36,7 @@ function BillPaymentPage() {
 
   const validateForm = () => {
     let formErrors = {};
+
     if (selectedBill === 'Electricity') {
       if (!electricityProvider) {
         formErrors.electricityProvider = 'Please select an electricity provider.';
@@ -42,8 +44,8 @@ function BillPaymentPage() {
       if (!accountNumber) {
         formErrors.accountNumber = 'Account number is required.';
       }
-      if (!accountId) {
-        formErrors.accountId = 'Account ID is required.';
+      if (!accountId || accountId.length !== 12) {
+        formErrors.accountId = 'Account ID must be exactly 12 digits.';
       }
       if (!amount || amount <= 0) {
         formErrors.amount = 'Please enter a valid amount.';
@@ -53,6 +55,9 @@ function BillPaymentPage() {
     if (selectedBill === 'MobileRecharge') {
       if (!simProvider) {
         formErrors.simProvider = 'Please select a SIM provider.';
+      }
+      if (!mobileNumber) {
+        formErrors.mobileNumber = 'Mobile number is required.';
       }
       if (!selectedPlan) {
         formErrors.selectedPlan = 'Please select a recharge plan.';
@@ -66,16 +71,21 @@ function BillPaymentPage() {
       if (!tvProvider) {
         formErrors.tvProvider = 'Please select a TV provider.';
       }
+      if (!accountId || accountId.length !== 12) {
+        formErrors.accountId = 'Account ID must be exactly 12 digits.';
+      }
       if (!selectedPlan) {
         formErrors.selectedPlan = 'Please select a recharge plan.';
-      }
-      if (!amount || amount <= 0) {
-        formErrors.amount = 'Please enter a valid amount.';
       }
     }
 
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
+  };
+
+  const handlePlanChange = (plan) => {
+    setSelectedPlan(plan);
+    setAmount(plan); // Set amount based on selected plan
   };
 
   const handleSubmit = (event) => {
@@ -94,6 +104,7 @@ function BillPaymentPage() {
       // Reset form fields
       setAccountNumber('');
       setAccountId('');
+      setMobileNumber('');
       setAmount('');
       setElectricityProvider('');
       setSimProvider('');
@@ -114,8 +125,10 @@ function BillPaymentPage() {
               setSelectedBill(e.target.value);
               setSimProvider('');
               setTvProvider('');
+              setMobileNumber('');
               setAmount('');
               setSelectedPlan('');
+              setElectricityProvider('');
               setErrors({});
             }}
             style={styles.input}
@@ -167,7 +180,8 @@ function BillPaymentPage() {
                 value={accountId}
                 onChange={(e) => setAccountId(e.target.value)}
                 style={styles.input}
-                placeholder="Enter account ID"
+                placeholder="Enter account ID (12 digits)"
+                maxLength="12"
                 required
               />
               {errors.accountId && <p style={styles.error}>{errors.accountId}</p>}
@@ -199,6 +213,7 @@ function BillPaymentPage() {
                 onChange={(e) => {
                   setSimProvider(e.target.value);
                   setSelectedPlan(''); // Reset plan selection when provider changes
+                  setAmount('');
                   setErrors({});
                 }}
                 style={styles.input}
@@ -213,25 +228,36 @@ function BillPaymentPage() {
               {errors.simProvider && <p style={styles.error}>{errors.simProvider}</p>}
             </div>
 
-            {simProvider && (
-              <div style={styles.inputGroup}>
-                <label>Select Recharge Plan:</label>
-                <select
-                  value={selectedPlan}
-                  onChange={(e) => setSelectedPlan(e.target.value)}
-                  style={styles.input}
-                  required
-                >
-                  <option value="">Select Plan</option>
-                  {simPlans[simProvider]?.map((plan, index) => (
-                    <option key={index} value={plan}>
-                      ₹{plan}
-                    </option>
-                  ))}
-                </select>
-                {errors.selectedPlan && <p style={styles.error}>{errors.selectedPlan}</p>}
-              </div>
-            )}
+            <div style={styles.inputGroup}>
+              <label>Mobile Number:</label>
+              <input
+                type="text"
+                value={mobileNumber}
+                onChange={(e) => setMobileNumber(e.target.value)}
+                style={styles.input}
+                placeholder="Enter mobile number"
+                required
+              />
+              {errors.mobileNumber && <p style={styles.error}>{errors.mobileNumber}</p>}
+            </div>
+
+            <div style={styles.inputGroup}>
+              <label>Select Recharge Plan:</label>
+              <select
+                value={selectedPlan}
+                onChange={(e) => handlePlanChange(e.target.value)}
+                style={styles.input}
+                required
+              >
+                <option value="">Select Plan</option>
+                {simPlans[simProvider]?.map((plan, index) => (
+                  <option key={index} value={plan}>
+                    ₹{plan}
+                  </option>
+                ))}
+              </select>
+              {errors.selectedPlan && <p style={styles.error}>{errors.selectedPlan}</p>}
+            </div>
           </>
         )}
 
@@ -245,6 +271,7 @@ function BillPaymentPage() {
                 onChange={(e) => {
                   setTvProvider(e.target.value);
                   setSelectedPlan(''); // Reset plan selection when provider changes
+                  setAmount('');
                   setErrors({});
                 }}
                 style={styles.input}
@@ -258,50 +285,45 @@ function BillPaymentPage() {
               {errors.tvProvider && <p style={styles.error}>{errors.tvProvider}</p>}
             </div>
 
-            {tvProvider && (
-              <div style={styles.inputGroup}>
-                <label>Select Recharge Plan:</label>
-                <select
-                  value={selectedPlan}
-                  onChange={(e) => setSelectedPlan(e.target.value)}
-                  style={styles.input}
-                  required
-                >
-                  <option value="">Select Plan</option>
-                  {tvPlans[tvProvider]?.map((plan, index) => (
-                    <option key={index} value={plan}>
-                      ₹{plan}
-                    </option>
-                  ))}
-                </select>
-                {errors.selectedPlan && <p style={styles.error}>{errors.selectedPlan}</p>}
-              </div>
-            )}
+            <div style={styles.inputGroup}>
+              <label>Account ID:</label>
+              <input
+                type="text"
+                value={accountId}
+                onChange={(e) => setAccountId(e.target.value)}
+                style={styles.input}
+                placeholder="Enter account ID (12 digits)"
+                maxLength="12"
+                required
+              />
+              {errors.accountId && <p style={styles.error}>{errors.accountId}</p>}
+            </div>
+
+            <div style={styles.inputGroup}>
+              <label>Select Recharge Plan:</label>
+              <select
+                value={selectedPlan}
+                onChange={(e) => handlePlanChange(e.target.value)}
+                style={styles.input}
+                required
+              >
+                <option value="">Select Plan</option>
+                {tvPlans[tvProvider]?.map((plan, index) => (
+                  <option key={index} value={plan}>
+                    ₹{plan}
+                  </option>
+                ))}
+              </select>
+              {errors.selectedPlan && <p style={styles.error}>{errors.selectedPlan}</p>}
+            </div>
           </>
         )}
 
-        {/* Only show amount field if bill type is selected */}
-        {(selectedBill === 'MobileRecharge' || selectedBill === 'TVRecharge') && (
-          <div style={styles.inputGroup}>
-            <label>Amount:</label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              style={styles.input}
-              placeholder="Enter amount"
-              min="1"
-              required
-            />
-            {errors.amount && <p style={styles.error}>{errors.amount}</p>}
-          </div>
-        )}
-
-        <button type="submit" style={styles.button} disabled={processing}>
-          {processing ? 'Processing...' : 'Pay Now'}
+        <button type="submit" disabled={processing} style={styles.button}>
+          {processing ? 'Processing...' : 'Submit Payment'}
         </button>
 
-        {message && <p style={styles.message}>{message}</p>}
+        {message && <p style={styles.successMessage}>{message}</p>}
       </form>
     </div>
   );
@@ -309,45 +331,35 @@ function BillPaymentPage() {
 
 const styles = {
   container: {
-    maxWidth: '600px',
-    margin: '50px auto',
     padding: '20px',
-    borderRadius: '10px',
-    backgroundColor: '#F8F0E3',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-    textAlign: 'center',
+    maxWidth: '600px',
+    margin: '0 auto',
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '15px',
   },
   inputGroup: {
-    display: 'flex',
-    flexDirection: 'column',
+    marginBottom: '15px',
   },
   input: {
-    padding: '12px',
-    borderRadius: '5px',
-    border: '1px solid #ccc',
-    fontSize: '14px',
+    padding: '10px',
+    fontSize: '16px',
+    width: '100%',
   },
   button: {
-    padding: '12px',
-    borderRadius: '5px',
-    border: 'none',
-    backgroundColor: '#9C1A1C',
-    color: 'white',
-    cursor: 'pointer',
+    padding: '10px',
     fontSize: '16px',
-  },
-  message: {
-    color: 'green',
-    marginTop: '10px',
+    cursor: 'pointer',
   },
   error: {
     color: 'red',
-    fontSize: '12px',
+    fontSize: '14px',
+  },
+  successMessage: {
+    color: 'green',
+    fontSize: '16px',
+    marginTop: '20px',
   },
 };
 
