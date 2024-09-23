@@ -98,9 +98,7 @@ function BankAccountList() {
                 </td>
                 <td>{account.status}</td>
                 <td>
-                  <a href="#" className="view-statement">
-                    View
-                  </a>
+                  
                 </td>
               </tr>
             ))}

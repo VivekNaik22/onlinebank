@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const BankManagerRegistration = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
+    dateOfBirth: '',
     contactNo: '',
-    branch: '',
-    city: '',
+    address: '',
+    gender: '',
     pincode: '',
   });
   const [error, setError] = useState('');
+  const signupURL = 'http://localhost:8080/api/auth/admin/signup';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,12 +27,20 @@ const BankManagerRegistration = () => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  const handleSubmit = (e) => {
+  const validateContactNo = (contactNo) => {
+    return /^\d{10}$/.test(contactNo);
+  };
+
+  const validatePincode = (pincode) => {
+    return /^\d{6}$/.test(pincode);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { name, email, password, contactNo, branch, city, pincode } = formData;
+    const { name, email, password, contactNo, address, pincode, gender, dateOfBirth } = formData;
 
-    if (!name || !email || !password || !contactNo || !branch || !city || !pincode) {
+    if (!name || !email || !password || !contactNo || !address || !pincode || !gender || !dateOfBirth) {
       setError('All fields are required.');
       alert('All fields are required.');
       return;
@@ -47,9 +58,38 @@ const BankManagerRegistration = () => {
       return;
     }
 
-    setError('');
-    alert('Registration successful!');
-    // Perform registration action here
+    if (!validateContactNo(contactNo)) {
+      setError('Contact number must be 10 digits.');
+      alert('Contact number must be 10 digits.');
+      return;
+    }
+
+    if (!validatePincode(pincode)) {
+      setError('Pincode must be 6 digits.');
+      alert('Pincode must be 6 digits.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(signupURL, formData);
+      const message = response.data.message;
+      alert(message);
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        dateOfBirth: '',
+        contactNo: '',
+        address: '',
+        gender: '',
+        pincode: '',
+      });
+    } catch (error) {
+      console.error('Error registering Bank Manager:', error);
+      alert('Error registering Bank Manager. Please try again.');
+    } finally {
+      setError('');
+    }
   };
 
   return (
@@ -87,6 +127,39 @@ const BankManagerRegistration = () => {
           />
         </div>
         <div style={styles.inputGroup}>
+          <label>Date of Birth:</label>
+          <input
+            type="date"
+            name="dateOfBirth"
+            value={formData.dateOfBirth}
+            onChange={handleChange}
+            style={styles.input}
+          />
+        </div>
+        <div style={styles.inputGroup}>
+          <label>Gender:</label>
+          <div style={styles.radioGroup}>
+            <input
+              type="radio"
+              name="gender"
+              value="Male"
+              checked={formData.gender === "Male"}
+              onChange={handleChange}
+              style={styles.radioButton}
+            />
+            <label>Male</label>
+            <input
+              type="radio"
+              name="gender"
+              value="Female"
+              checked={formData.gender === "Female"}
+              onChange={handleChange}
+              style={styles.radioButton}
+            />
+            <label>Female</label>
+          </div>
+        </div>
+        <div style={styles.inputGroup}>
           <label>Contact No:</label>
           <input
             type="text"
@@ -97,21 +170,11 @@ const BankManagerRegistration = () => {
           />
         </div>
         <div style={styles.inputGroup}>
-          <label>Branch:</label>
+          <label>Address:</label>
           <input
             type="text"
-            name="branch"
-            value={formData.branch}
-            onChange={handleChange}
-            style={styles.input}
-          />
-        </div>
-        <div style={styles.inputGroup}>
-          <label>City:</label>
-          <input
-            type="text"
-            name="city"
-            value={formData.city}
+            name="address"
+            value={formData.address}
             onChange={handleChange}
             style={styles.input}
           />
@@ -150,6 +213,13 @@ const styles = {
   },
   inputGroup: {
     marginBottom: '15px',
+  },
+  radioGroup: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  radioButton: {
+    margin: '0 10px',
   },
   input: {
     width: 'calc(100% - 20px)',

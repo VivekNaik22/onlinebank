@@ -1,64 +1,92 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const [role, setRole] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [customerId, setCustomerId] = useState(''); // State for customer ID
+  const [adminId, setAdminId] = useState(''); // State for Admin ID
+  const [bankManagerId, setBankManagerId] = useState(''); // State for Bank Manager ID
+  const [customerId, setCustomerId] = useState(''); // State for Customer ID
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  const validateEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!role) {
       setError('Please select a role.');
-      alert('Please select a role.');
       return;
     }
 
     if (!password) {
       setError('Password is required.');
-      alert('Password is required.');
       return;
     }
 
-    // Validate customer ID when role is customer
+    // Validate IDs
     if (role === 'customer' && !customerId) {
       setError('Customer ID is required for customers.');
-      alert('Customer ID is required for customers.');
       return;
     }
 
-    // Validate email for admin and bankManager roles
-    if ((role === 'admin' || role === 'bankManager') && !validateEmail(email)) {
-      setError('Invalid email format.');
-      alert('Invalid email format.');
+    if ((role === 'admin' && !/^\d{10}$/.test(adminId)) || (role === 'bankManager' && !/^\d{10}$/.test(bankManagerId))) {
+      setError('Admin ID and Bank Manager ID must be 10 numeric characters.');
       return;
     }
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters long.');
-      alert('Password must be at least 6 characters long.');
       return;
     }
 
     setError('');
-    alert('Login successful!');
+    
+    // Construct login payload based on role
+    let payload = {
+      password,
+    };
 
-    // Redirect based on role
     if (role === 'admin') {
-      navigate('/admin-home');
+      payload.adminId = adminId;
     } else if (role === 'bankManager') {
-      navigate('/bank-homepage');
+      payload.bankManagerId = bankManagerId;
     } else if (role === 'customer') {
-      navigate('/user-homepage');
+      payload.userId = customerId;
+    }
+
+    try {
+      let response;
+
+      // Determine the correct login endpoint
+      if (role === 'admin') {
+        response = await axios.post('http://localhost:8080/api/auth/admin/signin', payload);
+      } else if (role === 'bankManager') {
+        response = await axios.post('http://localhost:8080/api/auth/bankManager/signin', payload);
+      } else if (role === 'customer') {
+        response = await axios.post('http://localhost:8080/api/auth/customer/signin', payload);
+      }
+
+      // Handle successful login response
+      if (response.data.token) {
+        alert('Login successful!');
+        // You can store token in localStorage or state for later use
+        localStorage.setItem('token', response.data.token);
+
+        // Redirect based on role
+        if (role === 'admin') {
+          navigate('/admin-home');
+        } else if (role === 'bankManager') {
+          navigate('/bank-homepage');
+        } else if (role === 'customer') {
+          navigate('/user-homepage');
+        }
+      } else {
+        setError('Login failed, please check your credentials.');
+      }
+    } catch (error) {
+      setError('Login failed, please check your credentials.');
     }
   };
 
@@ -69,13 +97,13 @@ const Login = () => {
   const getRegisterLink = () => {
     switch (role) {
       case 'admin':
-        return '/register-admin'; 
+        return '/register-admin';
       case 'customer':
-        return '/register-user'; 
+        return '/register-user';
       case 'bankManager':
-        return '/register-bank-manager'; 
+        return '/register-bank-manager';
       default:
-        return '#'; 
+        return '#';
     }
   };
 
@@ -97,7 +125,6 @@ const Login = () => {
           </select>
         </div>
 
-        {/* Conditionally render Customer ID if role is customer */}
         {role === 'customer' && (
           <div style={styles.inputGroup}>
             <label>Customer ID:</label>
@@ -107,26 +134,39 @@ const Login = () => {
               onChange={(e) => setCustomerId(e.target.value)}
               style={styles.input}
               placeholder="Enter your Customer ID"
-              min="1" // Ensures the number is positive
+              min="1"
             />
           </div>
         )}
 
-        {/* Conditionally render Email ID if role is not customer */}
-        {(role === 'admin' || role === 'bankManager') && (
+        {role === 'admin' && (
           <div style={styles.inputGroup}>
-            <label>Email ID:</label>
+            <label>Admin ID:</label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={adminId}
+              onChange={(e) => setAdminId(e.target.value)}
               style={styles.input}
-              placeholder="Enter your email"
+              placeholder="Enter your Admin ID"
+              maxLength="10"
             />
           </div>
         )}
 
-        {/* Password field is shown for all roles */}
+        {role === 'bankManager' && (
+          <div style={styles.inputGroup}>
+            <label>Bank Manager ID:</label>
+            <input
+              type="text"
+              value={bankManagerId}
+              onChange={(e) => setBankManagerId(e.target.value)}
+              style={styles.input}
+              placeholder="Enter your Bank Manager ID"
+              maxLength="10"
+            />
+          </div>
+        )}
+
         <div style={styles.inputGroup}>
           <label>Password:</label>
           <div style={styles.passwordContainer}>
@@ -137,9 +177,9 @@ const Login = () => {
               style={styles.passwordInput}
               placeholder="Enter your password"
             />
-            <button 
-              type="button" 
-              onClick={togglePasswordVisibility} 
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
               style={styles.showPasswordButton}
             >
               {showPassword ? 'Hide' : 'Show'}
@@ -179,7 +219,7 @@ const styles = {
     marginBottom: '15px',
   },
   input: {
-    width: 'calc(100% - 24px)', // Adjusted width calculation for proper alignment
+    width: 'calc(100% - 24px)',
     padding: '12px',
     borderRadius: '5px',
     border: '1px solid #ccc',

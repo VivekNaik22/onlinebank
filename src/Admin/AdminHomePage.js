@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './AdminHomePage.css';
-// Make sure to have the correct path for your image
 
 const AdminHomePage = () => {
   return (
@@ -13,7 +12,7 @@ const AdminHomePage = () => {
         <nav className="admin-nav">
           <Link to="/register-bank">Register Bank Manager</Link>
           <Link to="/add-bank">Add Bank</Link>
-          <Link to="/view-banks">View Bank</Link>
+          <Link to="/view-banks">View Banks</Link>
           <Link to="/all-customers">All Customers</Link>
           <Link to="/all-bank-accounts">All Bank Accounts</Link>
           <Link to="/all-bank-transactions">All Bank Transactions</Link>
@@ -24,9 +23,9 @@ const AdminHomePage = () => {
       <main className="admin-main">
         <section className="hero-section">
           <div className="hero-content">
-            <h2>Instantly transfer, deposit, and withdraw funds</h2>
+            <h2>Instantly Transfer, Deposit, and Withdraw Funds</h2>
             <p>Banking, simplified and streamlined.</p>
-            <h3>Transact, deposit, withdraw securely.</h3>
+            <h3>Transact, Deposit, Withdraw Securely.</h3>
           </div>
           <div className="hero-image">
             <img src="./image/bankinglogo3.jpg" alt="Banking illustration" />

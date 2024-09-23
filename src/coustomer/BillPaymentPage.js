@@ -15,11 +15,7 @@ function BillPaymentPage() {
 
   const [errors, setErrors] = useState({});
 
-  const electricityProviders = {
-    Karnataka: ['BESCOM', 'HESCOM', 'MESCOM'],
-    Maharashtra: ['MSEB', 'BEST', 'Tata Power'],
-    Gujarat: ['PGVCL', 'UGVCL', 'MGVCL'],
-  };
+  
 
   const simPlans = {
     Airtel: [100, 200, 300],
